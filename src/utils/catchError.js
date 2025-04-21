@@ -1,5 +1,5 @@
 import { AppError } from "./appError.js";
-const asyncHandler = (fun)=>{
+export const asyncHandler = (fun)=>{
     return async (req,res,next)=>{
         try{
             return await fun(req,res,next);

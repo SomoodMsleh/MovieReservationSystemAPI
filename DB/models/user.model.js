@@ -19,7 +19,7 @@ const userSchema = new Schema({
     password:{
         type:String,
         required:true,
-        minlength:3,
+        minlength:6,
     },
     firstName:{
         type:String,
@@ -31,16 +31,13 @@ const userSchema = new Schema({
     },
     phoneNumber:{
         type:String,
-        required:true,
     },
     gender:{
         type:String,
-        required:true,
         enum: ["male", "female"],
     },
     role:{
         type:String,
-        required:true,
         enum:["user", "admin", "superAdmin"],
         default:"user"
     },
@@ -52,10 +49,14 @@ const userSchema = new Schema({
         type:Boolean,
         default:true,
     },
-    sendCode:{
-        type:String,
-        default:null,   
-    }
+    lastLogin: {
+        type: Date,
+        default: Date.now,
+    },
+    resetPasswordToken: String,
+	resetPasswordExpiresAt: Date,
+	verificationCode: String,
+	verificationCodeExpiresAt: Date,
 },{timestamps:true});
 
 

@@ -10,7 +10,7 @@ export async function sendEmail(to,subject,html) {
             },
         });
         const info = await transporter.sendMail({
-            from: `"T-Shop " <${process.env.SENDER_EMAIL}>`, // sender address
+            from: `${process.env.APP_NAME} <${process.env.SENDER_EMAIL}>`, // sender address
             to, // list of receivers
             subject, // Subject line
             html, // html body
