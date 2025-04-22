@@ -10,7 +10,7 @@ import {passwordResetRequestTemplate} from "../../utils/emailTemplates/passwordR
 import {passwordResetSuccessTemplate} from "../../utils/emailTemplates/passwordResetSuccessTemplate.js";
 
 
-export const register = async (req,res)=>{
+export const register = async (req,res,next)=>{
     const {username,email,password,firstName,lastName} = req.body;
     if (!email || !password || !username ||!firstName||!lastName) {
         return next(new AppError("All fields are required",400));
@@ -38,7 +38,7 @@ export const register = async (req,res)=>{
     const subject = "Verify your email";
     const html = verificationEmailTemplate.replace("{verificationCode}", req.body.verificationCode);
     await sendEmail(email,subject,html);
-    return res.status(201).json({success: true,message: "User created successfully",user: {...user._doc,password: undefined,},});
+    return res.status(201).json({success: true,message: "User created successfully",user: {_id: user._id,username: user.username,email: user.email,firstName: user.firstName,lastName: user.lastName}});
 
 };
 
@@ -64,7 +64,7 @@ export const  verifyEmail = async (req,res,next)=>{
 
 }
 
-export const login = async (req,res)=>{
+export const login = async (req,res,next)=>{
     const { email, password } = req.body;
     const user = await userModel.findOne({email});
     if (!user) {
@@ -106,7 +106,6 @@ export const forgotPassword = async (req, res, next) => {
     // Generate reset token
 	const resetToken = crypto.randomBytes(20).toString("hex");
 	const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
-
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpiresAt = resetTokenExpiresAt;
 
