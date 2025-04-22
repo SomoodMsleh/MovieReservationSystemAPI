@@ -5,7 +5,8 @@ const validation = (schema)=>{
         const inputData = {...req.body,...req.params}
         const validationResult = schema.validate(inputData,{abortEarly:false});
         if(validationResult?.error){
-            return next(new AppError(validateResults.error,400))
+            const errors = validationResult.error.details.map(e => e.message);
+            return next(new AppError(errors.join(", "), 400));
         }
         next()
     };
