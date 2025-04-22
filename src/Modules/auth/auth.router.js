@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {forgotPassword, login, logout, register, verifyEmail} from "./auth.controller.js";
+import {forgotPassword, login, logout, register, resetPassword, verifyEmail} from "./auth.controller.js";
 import {asyncHandler} from "../../utils/catchError.js";
 import {forgotPasswordSchema, loginSchema, registerSchema,verifyEmailSchema} from "./auth.validation.js";
 import validation from "../../middleware/validation.js";
@@ -10,5 +10,5 @@ router.post('/verifyEmail',validation(verifyEmailSchema),asyncHandler(verifyEmai
 router.post('/login',validation(loginSchema),asyncHandler(login));
 router.post('/logout',asyncHandler(logout));
 router.post('/forgotPassword',validation(forgotPasswordSchema),asyncHandler(forgotPassword));
-
+router.post('/resetPassword/:token',asyncHandler(resetPassword));
 export default router;
