@@ -66,3 +66,28 @@ export const getAllAdmins = async (req, res) => {
     const admins = await userModel.find({ role: "admin" }).select("-password");
     res.status(200).json({ success: true, admins });
 };
+
+
+export const toggleAdminStatus = async (req, res, next) => {
+    const { id } = req.params;
+    const admin = await userModel.findOne({ _id: id, role: "admin" });
+    if (!admin) {
+        return next(new AppError("Admin not found", 404));
+    }
+    admin.isActive = !admin.isActive;
+    await admin.save();
+    res.status(200).json({
+        success: true,
+        message: `Admin is now ${admin.isActive ? "active" : "inactive"}`,
+        admin,
+    });
+};
+
+export const deleteAdmin = async (req, res, next) => {
+    const { id } = req.params;
+    const admin = await userModel.findOneAndDelete({ _id: id, role: "admin" });
+    if (!admin) {
+        return next(new AppError("Admin not found", 404));
+    }
+    res.status(200).json({ success: true, message: "Admin deleted successfully" });
+};

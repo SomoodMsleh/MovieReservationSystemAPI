@@ -8,3 +8,13 @@ export const updateUserRoleSchema = Joi.object({
 export const getAdminByIdSchema = Joi.object({
     id: Joi.string().hex().length(24).required(),
 }); 
+
+
+export const toggleAdminStatusSchema = Joi.object({
+    id: Joi.string().hex().length(24).required(),
+}); 
+
+
+export const deleteAdminSchema = Joi.object({
+    id: Joi.string().hex().length(24).required(),
+}); 

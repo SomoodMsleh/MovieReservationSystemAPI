@@ -40,7 +40,7 @@
 ### Admin Management Endpoints (SuperAdmin only)
 - `GET /admin/` - Get all admins
 - `GET /admin/:id` - Get specific admin
-- `PUT /admin/:id` - Update user roles (convert user role from user to admin)
+- `PUT /admin/:id` - Update user roles 
 - `PUT /admin/:id/status` - Toggle admin active status
 - `DELETE /admin/:id` - Delete admin
 
