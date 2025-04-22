@@ -30,8 +30,6 @@ export const register = async (req,res)=>{
     req.body.verificationCodeExpiresAt = Date.now() + 24 * 60 * 60 * 1000;
     req.body.password = hashPassword;
     const user = await userModel.create(req.body);
-    const userInfo = {_id:user._id,email,username,role:user.role};
-    generateTokenAndSetCookie(res,userInfo);
     const subject = "Verify your email";
     const html = verificationEmailTemplate.replace("{verificationCode}", req.body.verificationCode);
     await sendEmail(email,subject,html);
@@ -57,14 +55,34 @@ export const  verifyEmail = async (req,res,next)=>{
     res.status(200).json({
         success: true,
         message: "Email verified successfully",
-        user: {
-            ...user._doc,
-            password: undefined,
-        },
     });    
 
 }
 
 export const login = async (req,res)=>{
+    const { email, password } = req.body;
+    const user = await userModel.findOne({email});
+    if (!user) {
+        return next(new AppError("Invalid credentials",400));
+    }
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
+	if (!isPasswordValid) {
+        return next(new AppError("Invalid credentials",400));
+    }
+    if(!user.isEmailConfirmed){
+        return next(new AppError("Plz confirm your email",400));
+    }
+    if(!user.isActive){
+        return next(new AppError("Your account is blocked",400));
+    }
+    const userInfo = {_id:user._id,email,username:user.username,role:user.role,firstName:user.firstName,lastName:user.lastName};
+    const token = generateTokenAndSetCookie(res,userInfo);
+    user.lastLogin = new Date();
+	await user.save();
 
+	res.status(200).json({
+		success: true,
+		message: "Logged in successfully",
+		user: token
+	});
 };
