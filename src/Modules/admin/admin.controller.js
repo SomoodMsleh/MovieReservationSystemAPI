@@ -1,0 +1,51 @@
+import userModel from '../../../DB/models/user.model.js';
+import {AppError} from "../../utils/appError.js"
+import bcryptjs from 'bcryptjs';
+
+
+export const updateUserRole = async (req, res, next) => {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    const user = await userModel.findById(id);
+    if (!user) {
+        return next(new AppError("User not found", 404));
+    }
+
+    const issues = [];
+
+    if (!user.isEmailConfirmed) {
+        issues.push("Email is not confirmed");
+    }
+
+    if (!user.isActive) {
+        issues.push("Account is inactive");
+    }
+
+    if (user.role === role) {
+        issues.push(`User already has the '${role}' role`);
+    }
+
+    if (issues.length) {
+        return next(new AppError(issues.join(". "), 400));
+    }
+
+    user.role = role;
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: `Role updated to '${role}'`,
+        user: {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phoneNumber: user.phoneNumber,
+            gender: user.gender,
+            role: user.role,
+            isActive: user.isActive,
+        },
+    });
+};
