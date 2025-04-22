@@ -9,3 +9,7 @@ export const registerSchema = Joi.object({
     phoneNumber: Joi.string().pattern(/^\+?\d{10,15}$/).optional(),
     gender: Joi.string().valid("male", "female").optional(),
 });
+
+export const verifyEmailSchema = Joi.object({
+    verificationCode: Joi.string().alphanum().length(8).required()
+});
