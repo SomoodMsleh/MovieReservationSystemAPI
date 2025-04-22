@@ -13,3 +13,8 @@ export const registerSchema = Joi.object({
 export const verifyEmailSchema = Joi.object({
     verificationCode: Joi.string().alphanum().length(8).required()
 });
+
+export const loginSchema = Joi.object({
+    email: Joi.string().email({ tlds: { allow: false } }).required(),
+    password: Joi.string().min(6).required()
+});
