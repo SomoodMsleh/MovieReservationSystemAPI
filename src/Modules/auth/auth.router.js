@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {forgotPassword, login, logout, register, resetPassword, updateProfile, verifyEmail} from "./auth.controller.js";
+import {forgotPassword, getUserProfile, login, logout, register, resetPassword, updateProfile, verifyEmail} from "./auth.controller.js";
 import {asyncHandler} from "../../utils/catchError.js";
 import {forgotPasswordSchema, loginSchema, registerSchema,resetPasswordSchema,updateProfileSchema,verifyEmailSchema} from "./auth.validation.js";
 import validation from "../../middleware/validation.js";
@@ -15,5 +15,6 @@ router.post('/logout',auth(),asyncHandler(logout));
 router.post('/forgotPassword',forgotPasswordLimiter,validation(forgotPasswordSchema),asyncHandler(forgotPassword));
 router.post('/resetPassword/:token',validation(resetPasswordSchema),asyncHandler(resetPassword));
 router.put('/profile', auth(),validation(updateProfileSchema), asyncHandler(updateProfile));
+router.get('/profile', auth(),asyncHandler(getUserProfile));
 
 export default router;

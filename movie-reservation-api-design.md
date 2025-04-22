@@ -32,7 +32,9 @@
 - `POST /auth/login` - User login
 - `POST /auth/logout` - User logout
 - `post /auth/forgotPassword` -if user forget password
-- `post /auth/resetPassword/:token` -user reset new password
+- `post /auth/resetPassword/:token` - user reset new password
+- `put /auth/profile` -Update user profile
+- `get /auth/profile` -Get user profile
 
 
 

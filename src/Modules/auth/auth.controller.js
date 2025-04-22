@@ -170,4 +170,24 @@ export const updateProfile = async (req,res,next)=>{
             gender: user.gender
         }
     });
-}
+};
+
+export const getUserProfile = async (req, res, next) => {
+    const user = await userModel.findById(req.userId).select("-password");
+
+    if (!user) {
+        return next(new AppError("User not found", 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        user: {
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phoneNumber: user.phoneNumber,
+            gender: user.gender,
+        }
+    });
+};
