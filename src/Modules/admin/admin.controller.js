@@ -60,4 +60,9 @@ export const getAdminById = async (req,res,next)=>{
         return next(new AppError("Admin not found", 404));
     }
     res.status(200).json({ success: true, admin});
-}
+};
+
+export const getAllAdmins = async (req, res) => {
+    const admins = await userModel.find({ role: "admin" }).select("-password");
+    res.status(200).json({ success: true, admins });
+};
