@@ -6,7 +6,9 @@ import bcryptjs from 'bcryptjs';
 export const updateUserRole = async (req, res, next) => {
     const { id } = req.params;
     const { role } = req.body;
-
+    if (!["user", "admin"].includes(role)) {
+        return next(new AppError("Invalid role. Allowed roles: 'user', 'admin'", 400));
+    }
     const user = await userModel.findById(id);
     if (!user) {
         return next(new AppError("User not found", 404));
@@ -49,3 +51,5 @@ export const updateUserRole = async (req, res, next) => {
         },
     });
 };
+
+
