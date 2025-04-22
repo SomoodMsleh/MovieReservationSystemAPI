@@ -3,7 +3,8 @@ import bcryptjs from 'bcryptjs';
 import {generateTokenAndSetCookie} from "../../utils/generateTokenAndSetCookie.js";
 import {customAlphabet} from "nanoid";
 import {sendEmail} from "../../utils/sendEmail.js";
-import { verificationEmailTemplate } from "../../utils/emailTemplates/verificationEmailTemplate.js"
+import { verificationEmailTemplate } from "../../utils/emailTemplates/verificationEmailTemplate.js";
+
 export const register = async (req,res)=>{
     const {username,email,password,firstName,lastName} = req.body;
     if (!email || !password || !username ||!firstName||!lastName) {
@@ -25,14 +26,23 @@ export const register = async (req,res)=>{
 	}
 
     const hashPassword = bcryptjs.hashSync(password,parseInt(process.env.SALT));
-    const verificationCode = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)();
-    const verificationCodeExpiresAt = Date.now() + 24 * 60 * 60 * 1000;
-    const user = await userModel.create({username,email,firstName,lastName,password:hashPassword,verificationCode,verificationCodeExpiresAt});
+    req.body.verificationCode = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)();
+    req.body.verificationCodeExpiresAt = Date.now() + 24 * 60 * 60 * 1000;
+    req.body.password = hashPassword;
+    const user = await userModel.create(req.body);
     const userInfo = {_id:user._id,email,username,role:user.role};
-    const token = generateTokenAndSetCookie(res,userInfo);
+    generateTokenAndSetCookie(res,userInfo);
     const subject = "Verify your email";
-    const html = verificationEmailTemplate.replace("{verificationCode}", verificationCode);
+    const html = verificationEmailTemplate.replace("{verificationCode}", req.body.verificationCode);
     await sendEmail(email,subject,html);
-    return res.status(201).json({success: true,message: "User created successfully",token});
+    return res.status(201).json({success: true,message: "User created successfully",user: {...user._doc,password: undefined,},});
+
+};
+
+export const  verifyEmail = async (req,res,next)=>{
 
 }
+
+export const login = async (req,res)=>{
+
+};
