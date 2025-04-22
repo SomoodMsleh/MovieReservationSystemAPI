@@ -53,3 +53,11 @@ export const updateUserRole = async (req, res, next) => {
 };
 
 
+export const getAdminById = async (req,res,next)=>{
+    const { id } = req.params;
+    const admin = await userModel.findOne({ _id: id, role: "admin" }).select("-password");
+    if (!admin) {
+        return next(new AppError("Admin not found", 404));
+    }
+    res.status(200).json({ success: true, admin});
+}

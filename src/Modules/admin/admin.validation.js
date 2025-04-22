@@ -5,3 +5,6 @@ export const updateUserRoleSchema = Joi.object({
     role: Joi.string().required()
 }); 
 
+export const getAdminByIdSchema = Joi.object({
+    id: Joi.string().hex().length(24).required(),
+}); 
