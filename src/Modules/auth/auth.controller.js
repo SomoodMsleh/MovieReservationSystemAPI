@@ -143,3 +143,31 @@ export const resetPassword = async (req, res,next) => {
 	res.status(200).json({ success: true, message: "Password reset successful" });
 
 };
+
+export const updateProfile = async (req,res,next)=>{
+    const {firstName,lastName,phoneNumber,gender} = req.body;
+    const user = await userModel.findById(req.userId);
+    if (!user) {
+        return next(new AppError("Invalid credentials",400));
+    }
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.phoneNumber = phoneNumber;
+    user.gender = gender;
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Profile updated successfully",
+        user: {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phoneNumber: user.phoneNumber,
+            gender: user.gender
+        }
+    });
+}
