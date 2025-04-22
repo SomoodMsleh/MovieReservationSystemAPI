@@ -3,7 +3,7 @@ import bcryptjs from 'bcryptjs';
 import {generateTokenAndSetCookie} from "../../utils/generateTokenAndSetCookie.js";
 import {customAlphabet} from "nanoid";
 import {sendEmail} from "../../utils/sendEmail.js";
-import { verificationEmailTemplate } from "../../utils/emailTemplates/verificationEmailTemplate.js";
+import { verificationEmailTemplate,welcomeEmailTemplate } from "../../utils/emailTemplates/verificationEmailTemplate.js";
 
 export const register = async (req,res)=>{
     const {username,email,password,firstName,lastName} = req.body;
@@ -40,6 +40,28 @@ export const register = async (req,res)=>{
 };
 
 export const  verifyEmail = async (req,res,next)=>{
+    const {verificationCode} = req.body;
+    const user = await userModel.findOne({verificationCode,verificationCodeExpiresAt:{$gt:Date.now()}});
+    if(!user){
+        return next(new AppError("Invalid or expired verification code",400));
+    }
+    user.isEmailConfirmed = true;
+    user.verificationCode = undefined;
+	user.verificationCodeExpiresAt = undefined;
+    await user.save();
+
+    const subject = `Welcome to ${process.env.APP_NAME} – Email Verified Successfully`;
+    const html = welcomeEmailTemplate(user.username);;
+
+    await sendEmail(user.email,subject,html);
+    res.status(200).json({
+        success: true,
+        message: "Email verified successfully",
+        user: {
+            ...user._doc,
+            password: undefined,
+        },
+    });    
 
 }
 

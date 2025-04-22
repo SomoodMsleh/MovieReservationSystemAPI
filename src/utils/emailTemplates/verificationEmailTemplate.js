@@ -27,3 +27,31 @@ export const verificationEmailTemplate = `
 </body>
 </html>
 `;
+
+
+export const welcomeEmailTemplate = (username = 'there') => `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 0;">
+  <div style="background: linear-gradient(to right, #4CAF50, #45a049); padding: 20px; text-align: center;">
+    <h1 style="color: white; margin: 0;">Welcome to ${process.env.APP_NAME}</h1>
+  </div>
+  <div style="background-color: #fff; padding: 30px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+    <p>Hi <strong>${username}</strong>,</p>
+    <p>Thanks for verifying your email. You're now ready to use all features of our platform.</p>
+    <p>We’re happy to have you with us.</p>
+    <p>If you have any questions or feedback, reply to this email or contact support.</p>
+    <p>Enjoy your experience.</p>
+    <p style="margin-top: 40px;">Best regards,<br> The ${process.env.APP_NAME} Team</p>
+  </div>
+  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
+    <p>This is an automated message. Please do not reply.</p>
+  </div>
+</body>
+</html>
+`;
