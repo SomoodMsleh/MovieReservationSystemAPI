@@ -4,6 +4,10 @@ import {generateTokenAndSetCookie} from "../../utils/generateTokenAndSetCookie.j
 import {customAlphabet} from "nanoid";
 import {sendEmail} from "../../utils/sendEmail.js";
 import { verificationEmailTemplate,welcomeEmailTemplate } from "../../utils/emailTemplates/verificationEmailTemplate.js";
+import crypto from "crypto";
+import {passwordResetRequestTemplate} from "../../utils/emailTemplates/passwordResetRequestTemplate.js";
+import {passwordResetSuccessTemplate} from "../../utils/emailTemplates/passwordResetSuccessTemplate.js";
+
 
 export const register = async (req,res)=>{
     const {username,email,password,firstName,lastName} = req.body;
@@ -90,4 +94,29 @@ export const login = async (req,res)=>{
 export const logout = async(req,res,next)=>{
     res.clearCookie("token");
 	res.status(200).json({ success: true, message: "Logged out successfully" });  
-}
+};
+
+export const forgotPassword = async (req, res, next) => {
+    const {email} = req.body;
+    const user = await userModel.findOne({email});
+    if(!user){
+        return next(new AppError("User not found",404));
+    }
+    // Generate reset token
+	const resetToken = crypto.randomBytes(20).toString("hex");
+	const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpiresAt = resetTokenExpiresAt;
+
+    await user.save();
+    const resetURL = `${process.env.CLIENT_URL}/resetPassword/${resetToken}`;
+	// send email
+    
+    const html = passwordResetRequestTemplate.replace("{resetURL}", resetURL);
+    const subject =  "Reset your password";
+	await sendEmail(user.email,subject,html);
+
+    res.status(200).json({ success: true, message: "Password reset link sent to your email" });
+};
+
