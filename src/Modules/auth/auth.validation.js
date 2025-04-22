@@ -15,6 +15,7 @@ export const verifyEmailSchema = Joi.object({
 });
 
 export const loginSchema = Joi.object({
-    email: Joi.string().email({ tlds: { allow: false } }).required(),
+    email: Joi.string().email({ tlds: { allow: false } }).required(),//tlds: Top-Level Domains like :- .com, .net, .org.
     password: Joi.string().min(6).required()
 });
+
