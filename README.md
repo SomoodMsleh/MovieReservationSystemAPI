@@ -11,7 +11,7 @@
 - `lastName`: String
 - `phoneNumber`: String
 - `role`: String (enum: ["user", "admin", "superAdmin"], default: "user")
-- `gender`: String (enum: ["male", "female"])
+- `gender`: String (enum: ["male", "female","other"])
 - `isEmailConfirmed`:Boolean (default: false for user until Confirm email)
 - `isActive`: Boolean (default: true for users, requires activation for admins)
 - `lastLogin:`: Date
@@ -22,6 +22,35 @@
 - `createdAt`: Date
 - `updatedAt`: Date
 
+### Movie Model
+- `_id`: ObjectId
+- `title`: String (required, unique, lowercase)
+- `slug`: String (required)
+- `description`: String (required)
+- `duration`: Number (minutes, required)
+- `posterImage`: Object (public_id && secure_url) (required)
+- `releaseDate`: Date (required)
+- `endDate`: Date (when the movie stops showing)
+- `genres`: Array of ObjectIds (references to Genre model)
+- `rating`: 
+  - `average`: Number (0-10, default: 0)
+  - `count`: Number (default: 0)
+- `director`: String
+- `cast`: Array of Strings (max length: 100 per string)
+- `language`: String (default: "english")
+- `isActive`: Boolean (default: true)
+- `availableSeats`: Number (default: 0)
+- `createdAt`: Date
+- `updatedAt`: Date
+
+
+### Genre Model
+- `_id`: ObjectId
+- `name`: String (required, unique, lowercase)
+- `description`: String (max length: 300)
+- `slug`: String (unique, lowercase)
+- `createdAt`: Date
+- `updatedAt`: Date
 
 
 ## API Endpoints

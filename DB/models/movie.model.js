@@ -9,6 +9,10 @@ const movieSchema = new Schema({
         lowercase: true,
         unique: true
     },
+    slug:{
+        type:String,
+        required:true,
+    },
     description: {
         type: String,
         required: true,
@@ -56,9 +60,18 @@ const movieSchema = new Schema({
         trim: true,
         maxlength: 100
     }],
+    language: {
+        type: String,
+        trim: true,
+        default: 'english'
+    },
     isActive: {
         type: Boolean,
         default: true
+    },
+    availableSeats: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 

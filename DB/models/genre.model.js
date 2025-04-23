@@ -13,6 +13,11 @@ const genreSchema = new Schema({
         type: String,
         trim: true,
         maxlength: 300
+    },
+    slug: {
+        type: String,
+        unique: true,
+        lowercase: true
     }
 }, { timestamps: true });
 // Case-insensitive unique index
