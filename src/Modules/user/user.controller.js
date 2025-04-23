@@ -25,3 +25,13 @@ export const toggleUserStatus = async (req, res, next) => {
     await user.save();
     res.status(200).json({ success: true, message: `User is now ${user.isActive ? 'active' : 'inactive'}` });
 };
+
+
+export const deleteUser = async (req, res, next) => {
+    const  {id} = req.params;
+    const user = await userModel.findOneAndDelete({ _id: id, role: 'user' });
+    if (!user) {
+        return next(new AppError('User not found', 404));
+    }
+    res.status(200).json({ success: true, message: 'User deleted' });
+};
