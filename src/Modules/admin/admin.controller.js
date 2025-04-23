@@ -62,7 +62,7 @@ export const getAdminById = async (req,res,next)=>{
     res.status(200).json({ success: true, admin});
 };
 
-export const getAllAdmins = async (req, res) => {
+export const getAllAdmins = async (req, res,next) => {
     const admins = await userModel.find({ role: "admin" }).select("-password");
     res.status(200).json({ success: true, admins });
 };
