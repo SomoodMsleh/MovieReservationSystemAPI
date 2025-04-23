@@ -96,12 +96,28 @@ export const deleteAdmin = async (req, res, next) => {
 export const forceResetPassword = async (req, res, next) => {
     const { id } = req.params;
     const { newPassword } = req.body;
+
     const user = await userModel.findById(id);
-    if (!user || user.role !== "admin") {
-        return next(new AppError("Admin not found", 404));
+    if (!user) {
+        return next(new AppError("User not found", 404));
     }
+
+    if (user.role !== "admin") {
+        return next(new AppError("User is not an admin", 400));
+    }
+
+    const isSamePassword = await bcryptjs.compare(newPassword, user.password);
+    if (isSamePassword) {
+        return next(new AppError("New password must be different", 400));
+    }
+
     const hashed = await bcryptjs.hash(newPassword, parseInt(process.env.SALT));
     user.password = hashed;
+
     await user.save();
-    res.status(200).json({ success: true, message: "Password reset successfully" });
+
+    res.status(200).json({
+        success: true,
+        message: "Password reset successfully"
+    });
 };
