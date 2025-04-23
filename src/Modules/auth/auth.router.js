@@ -3,7 +3,7 @@ import {forgotPassword, getUserProfile, login, logout, register, resetPassword, 
 import {asyncHandler} from "../../utils/catchError.js";
 import {forgotPasswordSchema, loginSchema, registerSchema,resetPasswordSchema,updateProfileSchema,verifyEmailSchema} from "./auth.validation.js";
 import validation from "../../middleware/validation.js";
-import { forgotPasswordLimiter } from "../../middleware/rateLimiter.js";
+import { forgotPasswordLimiter } from "../../utils/rateLimiter.js"
 import { auth } from "../../middleware/auth.js";
 
 const router = Router();

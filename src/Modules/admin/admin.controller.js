@@ -91,3 +91,17 @@ export const deleteAdmin = async (req, res, next) => {
     }
     res.status(200).json({ success: true, message: "Admin deleted successfully" });
 };
+
+
+export const forceResetPassword = async (req, res, next) => {
+    const { id } = req.params;
+    const { newPassword } = req.body;
+    const user = await userModel.findById(id);
+    if (!user || user.role !== "admin") {
+        return next(new AppError("Admin not found", 404));
+    }
+    const hashed = await bcryptjs.hash(newPassword, parseInt(process.env.SALT));
+    user.password = hashed;
+    await user.save();
+    res.status(200).json({ success: true, message: "Password reset successfully" });
+};
