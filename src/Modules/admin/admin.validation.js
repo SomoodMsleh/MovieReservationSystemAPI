@@ -18,3 +18,8 @@ export const toggleAdminStatusSchema = Joi.object({
 export const deleteAdminSchema = Joi.object({
     id: Joi.string().hex().length(24).required(),
 }); 
+
+export const forceResetPasswordSchema = Joi.object({
+    id: Joi.string().hex().length(24).required(),
+    newPassword: Joi.string().min(6).required(),
+});
