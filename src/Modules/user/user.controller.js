@@ -15,3 +15,13 @@ export const getUserById = async (req, res, next) => {
     res.status(200).json({ success: true, user });
 };
 
+export const toggleUserStatus = async (req, res, next) => {
+    const  {id} = req.params;
+    const user = await userModel.findById(id);
+    if (!user || user.role !== 'user') {
+        return next(new AppError('User not found', 404));
+    }
+    user.isActive = !user.isActive;
+    await user.save();
+    res.status(200).json({ success: true, message: `User is now ${user.isActive ? 'active' : 'inactive'}` });
+};
