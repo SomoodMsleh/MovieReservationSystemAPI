@@ -11,3 +11,8 @@ export const toggleUserStatusSchema = Joi.object({
 export const deleteUserSchema = Joi.object({
     id: Joi.string().hex().length(24).required(),
 });
+
+export const changePasswordSchema = Joi.object({
+    currentPassword: Joi.string().min(6).required(),
+    newPassword: Joi.string().min(6).required()
+});
