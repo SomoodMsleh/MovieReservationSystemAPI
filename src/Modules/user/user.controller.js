@@ -6,3 +6,12 @@ export const getAllUsers = async (req, res,next) => {
     res.status(200).json({ success: true, users});
 };
 
+export const getUserById = async (req, res, next) => {
+    const  {id} = req.params;
+    const user = await userModel.findOne({ _id:id, role: 'user' }).select(['_id','username','email','firstName','lastName','phoneNumber','gender' , 'isActive','lastLogin']);
+    if (!user) {
+        return next(new AppError('User not found', 404));
+    }
+    res.status(200).json({ success: true, user });
+};
+
