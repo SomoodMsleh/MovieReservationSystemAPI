@@ -69,11 +69,16 @@ const movieSchema = new Schema({
         type: Boolean,
         default: true
     },
-    availableSeats: {
-        type: Number,
-        default: 0
+    createdBy: {
+        type: Types.ObjectId,
+        ref: "User"
+    },
+    updatedBy: {
+        type: Types.ObjectId,
+        ref: "User"
     }
 }, { timestamps: true });
+
 
 movieSchema.index({ title: 1 }, { unique: true, collation: { locale: 'en', strength: 2 } });
 

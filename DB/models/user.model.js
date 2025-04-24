@@ -41,6 +41,9 @@ const userSchema = new Schema({
         enum:["user", "admin", "superAdmin"],
         default:"user"
     },
+    profileImage:{
+        type:Object,
+    },
     isEmailConfirmed:{
         type:Boolean,
         default:false,

@@ -11,6 +11,7 @@ const theaterSchema = new Schema({
     slug: {
         type: String,
         lowercase: true,
+        required: true,
         unique: true
     },
     location: {
@@ -24,16 +25,7 @@ const theaterSchema = new Schema({
         min: 1
     },
     seatingLayout: {
-        type: Map,
-        of: new Schema({
-            rows: Number,
-            cols: Number,
-            seatType: {
-            type: String,
-                enum: ['regular', 'vip', 'accessible'],
-                default: 'regular'
-            }
-        }),
+        type: Object,
         default: {}
     },
     isActive: {
@@ -44,6 +36,14 @@ const theaterSchema = new Schema({
         type: Types.ObjectId,
         ref: 'User'
     },
+    createdBy: {
+        type: Types.ObjectId,
+        ref: "User"
+    },
+    updatedBy: {
+        type: Types.ObjectId,
+        ref: "User"
+    }
 },{timestamps:true});
 
 const theaterModel = mongoose.models.Theater || model("Theater", theaterSchema);

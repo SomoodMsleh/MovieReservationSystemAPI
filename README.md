@@ -1,104 +1,122 @@
+
+
 # Movie Reservation System API Design
 
 ## Models
 
 ### User Model
-- `_id`: ObjectId (MongoDB's default ID)
-- `username`: String (required, unique)
-- `email`: String (required, unique)
-- `password`: String (required, hashed)
-- `firstName`: String
-- `lastName`: String
-- `phoneNumber`: String
-- `role`: String (enum: ["user", "admin", "superAdmin"], default: "user")
-- `gender`: String (enum: ["male", "female","other"])
-- `isEmailConfirmed`:Boolean (default: false for user until Confirm email)
-- `isActive`: Boolean (default: true for users, requires activation for admins)
-- `lastLogin:`: Date
-- `resetPasswordToken`: String,
-- `resetPasswordExpiresAt`: Date,
-- `verificationCode`: String,
-- `verificationCodeExpiresAt`: Date,
-- `createdAt`: Date
-- `updatedAt`: Date
+- `_id`: ObjectId  
+- `username`: String (required, unique, min: 3, max: 30)  
+- `email`: String (required, unique, lowercase, trimmed)  
+- `password`: String (required, min length: 6)  
+- `firstName`: String (required)  
+- `lastName`: String (required)  
+- `phoneNumber`: String  
+- `gender`: String (enum: ["male", "female", "other"])  
+- `role`: String (enum: ["user", "admin", "superAdmin"], default: "user")  
+- `profileImage`: Object  
+- `isEmailConfirmed`: Boolean (default: false)  
+- `isActive`: Boolean (default: true)  
+- `lastLogin`: Date (default: now)  
+- `resetPasswordToken`: String  
+- `resetPasswordExpiresAt`: Date  
+- `verificationCode`: String  
+- `verificationCodeExpiresAt`: Date  
+- `createdAt`: Date  
+- `updatedAt`: Date  
+
+---
 
 ### Movie Model
-- `_id`: ObjectId
-- `title`: String (required, unique, lowercase)
-- `slug`: String (required)
-- `description`: String (required)
-- `duration`: Number (minutes, required)
-- `posterImage`: Object (public_id && secure_url) (required)
-- `releaseDate`: Date (required)
-- `endDate`: Date (when the movie stops showing)
-- `genres`: Array of ObjectIds (references to Genre model)
-- `rating`: 
-  - `average`: Number (0-10, default: 0)
-  - `count`: Number (default: 0)
-- `director`: String
-- `cast`: Array of Strings (max length: 100 per string)
-- `language`: String (default: "english")
-- `isActive`: Boolean (default: true)
-- `availableSeats`: Number (default: 0)
-- `createdAt`: Date
-- `updatedAt`: Date
+- `_id`: ObjectId  
+- `title`: String (required, unique, lowercase, trimmed)  
+- `slug`: String (required)  
+- `description`: String (required, trimmed)  
+- `duration`: Number (required, min: 1, in minutes)  
+- `posterImage`: Object (public_id, secure_url) (required)  
+- `releaseDate`: Date (required)  
+- `endDate`: Date (optional)  
+- `genres`: Array of ObjectIds (references `Genre`)  
+- `rating`:  
+  - `average`: Number (0–10, default: 0)  
+  - `count`: Number (default: 0)  
+- `director`: String (trimmed)  
+- `cast`: Array of Strings (max 100 characters per item)  
+- `language`: String (default: "english")  
+- `isActive`: Boolean (default: true)  
+- `createdBy`: ObjectId (reference `User`)  
+- `updatedBy`: ObjectId (reference `User`)  
+- `createdAt`: Date  
+- `updatedAt`: Date  
 
+---
 
 ### Genre Model
-- `_id`: ObjectId
-- `name`: String (required, unique, lowercase)
-- `description`: String (max length: 300)
-- `slug`: String (unique, lowercase)
-- `createdAt`: Date
-- `updatedAt`: Date
+- `_id`: ObjectId  
+- `name`: String (required, unique, lowercase, trimmed)  
+- `description`: String (max 300, trimmed)  
+- `slug`: String (unique, lowercase)  
+- `createdAt`: Date  
+- `updatedAt`: Date  
+
+---
 
 ### Theater Model
+- `_id`: ObjectId  
+- `name`: String (required, unique, trimmed)  
+- `slug`: String (required, lowercase, unique)  
+- `location`: String (required, trimmed)  
+- `totalSeats`: Number (required, min: 1)  
+- `seatingLayout`: Object (default: {})  
+- `isActive`: Boolean (default: true)  
+- `manager`: ObjectId (reference `User` with role `admin`)  
+- `createdBy`: ObjectId (reference `User`)  
+- `updatedBy`: ObjectId (reference `User`)  
+- `createdAt`: Date  
+- `updatedAt`: Date  
 
-- `_id`: ObjectId
-- `name`: String (required, unique, trimmed)
-- `slug`: String (lowercase, unique)
-- `location`: String (required, trimmed)
-- `totalSeats`: Number (required, minimum: 1)
-- `seatingLayout`: Map  
-  - Key: Section name or screen ID  
-  - Value:  
-    - `rows`: Number  
-    - `cols`: Number  
-    - `seatType`: String (enum: ["regular", "vip", "accessible"], default: "regular")
-- `isActive`: Boolean (default: true)
-- `manager`: ObjectId (reference to `User` with role `"admin"`)
-- `createdAt`: Date
-- `updatedAt`: Date
+---
 
+### Seat Model
+- `_id`: ObjectId  
+- `theaterId`: ObjectId (reference `Theater`)  
+- `row`: String (required, e.g., "A", "B")  
+- `number`: Number (required)  
+- `type`: String (enum: ["standard", "premium", "handicap"], default: "standard")  
+- `price`: Number (required, min: 0)  
+- `isActive`: Boolean (default: true)  
+- `createdAt`: Date  
+- `updatedAt`: Date  
+
+---
 
 ## API Endpoints
 
 ### Authentication Endpoints
-- `POST /auth/register` - Register a new user
-- `POST /auth//verifyEmail` - verify Email (req code)
-- `POST /auth/login` - User login
-- `POST /auth/logout` - User logout
-- `post /auth/forgotPassword` -if user forget password
-- `post /auth/resetPassword/:token` - user reset new password
-- `put /auth/profile` -Update user profile
-- `get /auth/profile` -Get user profile
+- `POST /auth/register` – Register a new user  
+- `POST /auth/verifyEmail` – Verify email with code  
+- `POST /auth/login` – Login  
+- `POST /auth/logout` – Logout  
+- `POST /auth/forgotPassword` – Request password reset  
+- `POST /auth/resetPassword/:token` – Reset password  
+- `PUT /auth/profile` – Update profile  
+- `GET /auth/profile` – Get profile  
 
+---
 
 ### Admin Management Endpoints (SuperAdmin only)
-- `GET /admin/` - Get all admins
-- `GET /admin/:id` - Get specific admin
-- `PUT /admin/:id` - Update user roles 
-- `PUT /admin/:id/status` - Toggle admin active status
-- `PUT /admin/:id/password` - Force Reset Admin Password
-- `DELETE /admin/:id` - Delete admin
+- `GET /admin` – List all admins  
+- `GET /admin/:id` – Get specific admin  
+- `PUT /admin/:id` – Update admin role  
+- `PUT /admin/:id/status` – Toggle active status  
+- `PUT /admin/:id/password` – Force reset password  
+- `DELETE /admin/:id` – Delete admin  
 
+---
 
 ### User Management Endpoints (Admin & SuperAdmin)
-- `GET /user` - Get all users
-- `GET /user/:id` - Get specific user
-- `PUT /user/:id/status` - Toggle user active status
-- `DELETE user/:id` - Delete user
-- `PUT /user/changePassword` - Change user password
-
-
-
+- `GET /user` – List all users  
+- `GET /user/:id` – Get specific user  
+- `PUT /user/:id/status` – Toggle user active status  
+- `DELETE /user/:id` – Delete user  
+- `PUT /user/changePassword` – Change password  
