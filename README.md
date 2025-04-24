@@ -53,22 +53,22 @@
 - `updatedAt`: Date
 
 ### Theater Model
-- `_id`: ObjectId  
-- `name`: String (required, unique)  
-- `slug`: String (lowercase, unique)  
-- `location`: String (required, trimmed)  
-- `screens`: Array of objects  
-  - Each screen has:
-    - `name`: String (required, trimmed)  
-    - `totalSeats`: Number (required, minimum: 1)  
-    - `layout`: Object  
-      - `rows`: Number (required)  
-      - `cols`: Number (required)  
-      - `seatType`: String (enum: ["regular", "vip", "accessible"], default: "regular")  
-- `manager`: ObjectId (reference to `User`, role: `admin`)  
-- `isActive`: Boolean (default: true)  
-- `createdAt`: Date  
-- `updatedAt`: Date 
+
+- `_id`: ObjectId
+- `name`: String (required, unique, trimmed)
+- `slug`: String (lowercase, unique)
+- `location`: String (required, trimmed)
+- `totalSeats`: Number (required, minimum: 1)
+- `seatingLayout`: Map  
+  - Key: Section name or screen ID  
+  - Value:  
+    - `rows`: Number  
+    - `cols`: Number  
+    - `seatType`: String (enum: ["regular", "vip", "accessible"], default: "regular")
+- `isActive`: Boolean (default: true)
+- `manager`: ObjectId (reference to `User` with role `"admin"`)
+- `createdAt`: Date
+- `updatedAt`: Date
 
 
 ## API Endpoints
