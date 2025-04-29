@@ -11,6 +11,7 @@
 - `password`: String (required, min length: 6)  
 - `firstName`: String (required)  
 - `lastName`: String (required)  
+- `dateOfBirth` : Date
 - `phoneNumber`: String  
 - `gender`: String (enum: ["male", "female", "other"])  
 - `role`: String (enum: ["user", "admin", "superAdmin"], default: "user")  
@@ -183,6 +184,7 @@
 
 ### Admin Management Endpoints (SuperAdmin only)
 - `GET /admin` – List all admins  
+- `GET /admin/stats` – Admin statistics route (totalAdmins,activeAdmins,inactiveAdmins,recentlyActiveAdmins)
 - `GET /admin/:id` – Get specific admin  
 - `PUT /admin/:id` – Update admin role  
 - `PUT /admin/:id/status` – Toggle active status  
@@ -193,9 +195,11 @@
 
 ### User Management Endpoints (Admin & SuperAdmin)
 - `GET /user` – List all users  
+- `GET /user/status` –  user statistics route (totalUsers,activeUsers,inactiveUsers,recentlyActiveUsers)
 - `GET /user/:id` – Get specific user  
 - `PUT /user/:id/status` – Toggle user active status  
 - `DELETE /user/:id` – Delete user  
+- `PUT /user/uploadProfileImage` – user add or update ProfileImage  
 - `PUT /user/changePassword` – Change password  
 
 ---
