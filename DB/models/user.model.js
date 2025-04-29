@@ -3,34 +3,47 @@ import mongoose from "mongoose";
 
 const userSchema = new Schema({
     username:{
-        type:String,
-        required:true,
-        unique:true,
-        minlength:3,
-        maxlength:30,
+        type: String,
+        required: [true, "Username is required"],
+        unique: true,
+        minlength: [3, "Username must be at least 3 characters"],
+        maxlength: [30, "Username cannot exceed 30 characters"],
+        trim: true
     },
     email:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true,
-        trim:true
+        type: String,
+        required: [true, "Email is required"],
+        unique: true,
+        lowercase: true,
+        trim: true,
+        match: [
+            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+            "Please provide a valid email address"
+        ]
     },
     password:{
-        type:String,
-        required:true,
-        minlength:6,
+        type: String,
+        required: [true, "Password is required"],
+        minlength: [6, "Password must be at least 6 characters"],
+        select: false
     },
     firstName:{
-        type:String,
-        required:true,
+        type: String,
+        required: [true, "First name is required"],
+        trim: true
     },
     lastName:{
-        type:String,
-        required:true,
+        type: String,
+        required: [true, "Last name is required"],
+        trim: true
+    },
+    dateOfBirth:{
+        type: Date,
+        //required: [true, "Date of birth is required"]
     },
     phoneNumber:{
         type:String,
+        trim: true
     },
     gender:{
         type:String,
@@ -61,6 +74,15 @@ const userSchema = new Schema({
 	verificationCode: String,
 	verificationCodeExpiresAt: Date,
 },{timestamps:true});
+
+// Virtual for full name
+userSchema.virtual('fullName').get(function() {
+    return `${this.firstName} ${this.lastName}`;
+});
+
+// Indexes for better query performance
+userSchema.index({ email: 1 });
+userSchema.index({ username: 1 });
 
 
 const userModel = mongoose.models.User || model("User",userSchema);
