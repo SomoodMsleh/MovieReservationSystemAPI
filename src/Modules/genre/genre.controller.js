@@ -50,3 +50,28 @@ export const getAllGenre= async (req,res,next)=>{
         genres
     });
 };
+
+export const getGenreById= async (req,res,next)=>{
+    const {id} = req.params;
+    
+    const genre = await genreModel.findById(id).populate([
+        {
+            path: 'createdBy',
+            select: 'username email'
+        },
+        {
+            path: 'updateBy',
+            select: 'username email'
+        }
+    ]);
+    
+    if(!genre) {
+        return next(new AppError('Genre not found', 404));
+    }
+    
+    res.status(200).json({
+        success: true,
+        genre
+    });
+};
+
