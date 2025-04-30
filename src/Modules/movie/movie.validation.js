@@ -75,3 +75,10 @@ export const createMovieSchema = Joi.object({
             })
 });
 
+export const getMovieByIdSchema = Joi.object({
+    id: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+        .required().messages({
+            "string.pattern.base": "Invalid movie ID format",
+            "any.required": "Movie ID is required"
+    })
+});

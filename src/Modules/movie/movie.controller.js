@@ -52,3 +52,18 @@ export const createMovie = async (req,res,next) => {
     });
 };
 
+export const getAllMovie = async (req,res,next)=>{
+
+};
+
+export const getMovieById = async (req,res,next)=>{
+    const { id } = req.params;
+    const movie = await movieModel.findById(id).populate('genres', 'name');
+    if (!movie) {
+        return next(new AppError("Movie not found", 404));
+    }
+    res.status(200).json({
+        status: "success",
+        data: { movie }
+    });
+};
