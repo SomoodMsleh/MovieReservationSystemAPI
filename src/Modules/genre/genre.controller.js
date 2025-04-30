@@ -75,3 +75,52 @@ export const getGenreById= async (req,res,next)=>{
     });
 };
 
+export const updateGenre = async (req,res,next)=>{
+    const {id} = req.params;
+    const {name, description} = req.body;
+    
+    const genre = await genreModel.findById(id);
+    if(!genre) {
+        return next(new AppError('Genre not found', 404));
+    }
+    
+    // Check if the new name already exists (if name is being changed)
+    if(name && name.toLowerCase() !== genre.name) {
+        const existingGenre = await genreModel.findOne({ name: name.toLowerCase() });
+        if(existingGenre) {
+            return next(new AppError('Genre with this name already exists', 409));
+        }
+    }
+    
+    // Only update slug if name is changing
+    const editGenre = {
+        name: name || genre.name,
+        description: description !== undefined ? description : genre.description,
+        updateBy: req.userId
+    };
+    
+    if(name && name.toLowerCase() !== genre.name) {
+        editGenre.slug = slugify(name, { lower: true });
+    }
+    
+    const updatedGenre = await genreModel.findByIdAndUpdate(
+        id,
+        editGenre,
+        {new: true}
+    ).populate([
+        {
+            path: 'createdBy',
+            select: 'username email'
+        },
+        {
+            path: 'updateBy',
+            select: 'username email'
+        }
+    ]);
+    
+    res.status(200).json({
+        success: true,
+        message: 'Genre updated successfully',
+        genre: updatedGenre
+    });
+}
