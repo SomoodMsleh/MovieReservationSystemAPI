@@ -10,8 +10,10 @@ const movieSchema = new Schema({
         unique: true
     },
     slug:{
-        type:String,
-        required:true,
+        type: String,
+        required: true,
+        lowercase: true,
+        unique: true
     },
     description: {
         type: String,
@@ -24,40 +26,30 @@ const movieSchema = new Schema({
         min: 1
     },
     posterImage: {
-        type:Object,
-        required:true
+        public_id: {
+            type: String,
+            required: true
+        },
+        secure_url: {
+            type: String,
+            required: true
+        }
     },
     releaseDate: {
         type: Date,
         required: true
-    },
-    endDate: {
-        type: Date
     },
     genres: [{
         type: Types.ObjectId,
         ref: "Genre",
         required: true
     }],
-    rating: {
-        average: {
-            type: Number,
-            min: 0,
-            max: 10,
-            default: 0
-        },
-        count: {
-            type: Number,
-            default: 0
-        }
-    },
-    director: {
-        type: String,
-        trim: true
+    contentRating:{
+        type: String, 
+        enum: ['G', 'PG', 'PG-13', 'R', 'NC-17']
     },
     cast: [{
         type: String,
-        trim: true,
         maxlength: 100
     }],
     language: {
@@ -69,18 +61,14 @@ const movieSchema = new Schema({
         type: Boolean,
         default: true
     },
-    createdBy: {
-        type: Types.ObjectId,
-        ref: "User"
-    },
-    updatedBy: {
-        type: Types.ObjectId,
-        ref: "User"
-    }
 }, { timestamps: true });
 
 
 movieSchema.index({ title: 1 }, { unique: true, collation: { locale: 'en', strength: 2 } });
+movieSchema.index({ slug: 1 }, { unique: true });
+movieSchema.index({ releaseDate: -1 });
+movieSchema.index({ genres: 1 });
+movieSchema.index({ isActive: 1});
 
 const movieModel = mongoose.models.Movie || model("Movie", movieSchema);
 

@@ -34,24 +34,22 @@
 - `slug`: String (required)  
 - `description`: String (required, trimmed)  
 - `duration`: Number (required, min: 1, in minutes)  
-- `posterImage`: Object (public_id, secure_url) (required)  
+- `posterImage`: object (public_id (String required) , secure_url (String required))
 - `releaseDate`: Date (required)  
-- `endDate`: Date (optional)  
-- `genres`: Array of ObjectIds (references `Genre`)  
-- `rating`:  
-  - `average`: Number (0–10, default: 0)  
-  - `count`: Number (default: 0)  
-- `director`: String (trimmed)  
+- `contentRating`:  String (enum: ['G', 'PG', 'PG-13', 'R', 'NC-17'])
+- `genres`: Array of ObjectIds (references `Genre`)   
 - `cast`: Array of Strings (max 100 characters per item)  
 - `language`: String (default: "english")  
 - `isActive`: Boolean (default: true)  
-- `createdBy`: ObjectId (reference `User`)  
-- `updatedBy`: ObjectId (reference `User`)  
 - `createdAt`: Date  
 - `updatedAt`: Date 
 
 **Indexes:**  
 - `title` (unique, case-insensitive)
+- `slug` (unique)
+- `releaseDate`
+- `genres`
+- `isActive`
 
 ---
 
