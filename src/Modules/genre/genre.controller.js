@@ -22,3 +22,31 @@ export const createGenre = async (req,res,next)=>{
     });
 } ;
 
+export const getAllGenreDetails = async (req,res,next)=>{
+    const genres = await genreModel.find().populate([
+        {
+            path: 'createdBy',
+            select: 'username email'
+        },
+        {
+            path: 'updateBy',
+            select: 'username email'
+        }
+    ]);
+    
+    res.status(200).json({
+        success: true,
+        count: genres.length,
+        genres
+    });
+};
+
+export const getAllGenre= async (req,res,next)=>{
+    const genres = await genreModel.find().select(['name','description']);
+    
+    res.status(200).json({
+        success: true,
+        count: genres.length,
+        genres
+    });
+};
