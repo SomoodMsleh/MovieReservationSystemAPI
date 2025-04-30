@@ -213,10 +213,12 @@
 - `DELETE movies/:id` - Delete movie (admin & superAdmin)
 
 ### Genre Management Endpoints
-- `GET /genres` - Get all genres (public)
-- `POST /genres` - Create genre (admin & superAdmin)
-- `PUT /genres/:id` - Update genre (admin & superAdmin)
-- `DELETE /genres/:id` - Delete genre (admin & superAdmin)
+- `GET /genre` - Get all genres (public)
+- `GET /genre/details` - Get all genres (admin,superAdmin) with who created and update each genre
+- `GET /genre/:id` - get genre details by id (admin & superAdmin)
+- `POST /genre` - Create genre (admin & superAdmin)
+- `PUT /genre/:id` - Update genre (admin & superAdmin)
+- `DELETE /genre/:id` - Delete genre (admin & superAdmin)
 
 ### Theater Management Endpoints
 - `GET /theaters` - Get all theaters (public)
