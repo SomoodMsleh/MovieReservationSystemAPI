@@ -33,3 +33,11 @@ export const updateGenreSchema = Joi.object({
         'string.max': 'Description cannot exceed 300 characters'
     })
 });
+
+export const deleteGenreSchema = Joi.object({
+    id: Joi.string().hex().length(24).required().messages({
+        'string.hex': 'Invalid ID format',
+        'string.length': 'ID must be 24 characters',
+        'any.required': 'ID is required'
+    })
+});

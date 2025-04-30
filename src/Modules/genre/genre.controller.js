@@ -123,4 +123,19 @@ export const updateGenre = async (req,res,next)=>{
         message: 'Genre updated successfully',
         genre: updatedGenre
     });
-}
+};
+
+export const deleteGenre = async (req, res, next) => {
+    const {id} = req.params;
+    
+    const genre = await genreModel.findByIdAndDelete(id);
+    
+    if(!genre) {
+        return next(new AppError('Genre not found', 404));
+    }
+    
+    res.status(200).json({
+        success: true,
+        message: 'Genre deleted successfully'
+    });
+};
