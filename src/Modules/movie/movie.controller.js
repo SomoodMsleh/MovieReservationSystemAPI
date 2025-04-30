@@ -2,12 +2,23 @@ import {AppError} from "../../utils/appError.js";
 import movieModel from "../../../DB/models/movie.model.js";
 import slugify from "slugify";
 import cloudinary from '../../utils/cloudinary.js';
+import genreModel from '../../../DB/models/genre.model.js'
+import { json } from "express";
 
 export const createMovie = async (req,res,next) => {
     const {title,description, duration, releaseDate,genres,cast, contentRating, language} = req.body;
     if(!title||!description||!duration||!releaseDate||!genres||!contentRating||!cast){
         return next(new AppError("All fields are required",400));
     }
+    const genres_ids = [];
+    for (const name of genres){
+        const genre = await genreModel.findOne({name:name.toLowerCase()});
+        if(!genre){
+            return next(new AppError(`Genre '${name}' not found`,400));
+        }
+        genres_ids.push(genre._id);
+    }
+
     if (!req.file) {
         return next(new AppError("Please upload an movie poster", 400));
     }
@@ -27,9 +38,10 @@ export const createMovie = async (req,res,next) => {
             ]
     });
     const posterImage = { secure_url, public_id };
+
     const movie = await movieModel.create({
         title:title?.toLowerCase(),slug,description,duration,
-        posterImage,releaseDate: new Date(releaseDate),genres,
+        posterImage,releaseDate: new Date(releaseDate),genres:genres_ids,
         contentRating,cast,language: movieLanguage?.toLowerCase()
     });
     

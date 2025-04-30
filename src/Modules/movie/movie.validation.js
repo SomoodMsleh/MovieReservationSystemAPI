@@ -44,23 +44,20 @@ export const createMovieSchema = Joi.object({
     }),
             
     genres: Joi.array()
-        .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
-            .min(1)
-            .required()
-            .messages({
-                "array.min": "At least one genre must be selected",
-                "string.pattern.base": "Invalid genre ID format",
-                "any.required": "Genres are required"
-            }),
-            
-        contentRating: Joi.string()
-            .valid('G', 'PG', 'PG-13', 'R', 'NC-17')
-            .required()
-            .messages({
-                "string.empty": "Content rating is required",
-                "any.only": "Content rating must be one of: G, PG, PG-13, R, NC-17",
-                "any.required": "Content rating is required"
-            }),
+    .items(Joi.string())
+    .min(1).optional()
+    .messages({
+        "array.min": "At least one genre must be selected"
+    }),
+
+    contentRating: Joi.string()
+        .valid('G', 'PG', 'PG-13', 'R', 'NC-17')
+        .required()
+        .messages({
+            "string.empty": "Content rating is required",
+            "any.only": "Content rating must be one of: G, PG, PG-13, R, NC-17",
+            "any.required": "Content rating is required"
+    }),
             
         cast: Joi.array()
             .items(Joi.string().max(100))
