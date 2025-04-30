@@ -59,10 +59,11 @@
 - `_id`: ObjectId  
 - `name`: String (required, unique, lowercase, trimmed)  
 - `description`: String (max 300, trimmed)  
-- `slug`: String (unique, lowercase)  
+- `slug`: String (unique, lowercase) 
+- `createdBy`: ObjectId (reference to User model)
+- `updateBy`: ObjectId (reference to User model) 
 - `createdAt`: Date  
 - `updatedAt`: Date  
-
 **Indexes:**  
 - `name` (unique, case-insensitive)
 

@@ -1,4 +1,4 @@
-import { Schema,model } from "mongoose";
+import { Schema,Types,model } from "mongoose";
 import mongoose from "mongoose";
 
 const genreSchema = new Schema({
@@ -17,7 +17,18 @@ const genreSchema = new Schema({
     slug: {
         type: String,
         unique: true,
+        required: true,
         lowercase: true
+    },
+    createdBy:{
+        type:Types.ObjectId,
+        ref:'User',
+        required:true,
+    },
+    updateBy:{
+        type:Types.ObjectId,
+        ref:'User',
+        required:true,
     }
 }, { timestamps: true });
 // Case-insensitive unique index
