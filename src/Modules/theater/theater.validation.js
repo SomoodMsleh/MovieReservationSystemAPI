@@ -90,3 +90,30 @@ export const toggleTheaterStatusSchema = Joi.object({
         'any.required': 'Theater ID is required'
     })
 });
+
+export const getAllTheaterSchema = Joi.object({
+    page: Joi.number()
+        .integer()
+        .min(1)
+        .optional()
+        .messages({
+            "number.base": "Page must be a number",
+            "number.min": "Page must be at least 1"
+        }),
+
+    limit: Joi.number()
+        .integer()
+        .min(1)
+        .max(100)
+        .optional()
+        .messages({
+            "number.base": "Limit must be a number",
+            "number.min": "Limit must be at least 1",
+            "number.max": "Limit cannot exceed 100"
+        }),
+
+
+    name: Joi.string().optional().trim(),
+    facilities: Joi.string().optional().trim(),
+    city: Joi.string().optional().trim(),
+});

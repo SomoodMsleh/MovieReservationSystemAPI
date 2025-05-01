@@ -36,8 +36,43 @@ export const createTheater = async (req,res,next)=>{
 };
 
 export const  getALLTheater = async (req,res,next)=>{
+    const { page = 1, limit = 10,name, city, facilities } = req.query;
+    const query = {};
+    if (name) {
+        query.name = { $regex: name, $options: 'i' };
+    }
+    if (city) {
+        query["address.city"] = { $regex: city, $options: "i" };
+    }
+    query.isActive = 'true';
+    if (facilities) {
+        const facilitiesArray = facilities.split(",");
+        query.facilities = { $all: facilitiesArray };
+    }
+    const skip = (page - 1) * limit;
+    
+    // Find theaters
+    const theaters = await theaterModel
+        .find(query)
+        .select("-seatingLayout.configuration") 
+        .limit(Number(limit))
+        .skip(skip)
+        .sort({ createdAt: -1 }
+    );
+
+    const totalTheaters = await theaterModel.countDocuments(query);
+    
+    res.status(200).json({
+        success:true,
+        results: theaters.length,
+        totalPages: Math.ceil(totalTheaters / limit),
+        currentPage: Number(page),
+        data: theaters
+    });
 
 };
+
+
 
 export const  getTheaterById = async (req,res,next)=>{
     const { id } = req.params;
@@ -102,14 +137,14 @@ export const updateTheater = async (req,res,next)=>{
         facilities:facilities||theater.facilities,
         manager:manger||theater.manager,
         contactInfo:req.body.contactInfo
-    },{new:true , runValidators: true });
+    },{new:true , runValidators: true }).populate('manager', 'username');
 
     return res.status(200).json({
         success: true,
         message: "Theater updated successfully",
         theater: updatedTheater
     });
-}
+};
 
 export const deleteTheater = async (req,res,next)=>{
     const { id } = req.params;
@@ -125,7 +160,7 @@ export const deleteTheater = async (req,res,next)=>{
         success: true,
         message: "Theater deleted successfully",
     });
-}
+};
 
 export const toggleTheaterStatus = async (req,res,next)=>{
     const  {id} = req.params;
@@ -137,4 +172,4 @@ export const toggleTheaterStatus = async (req,res,next)=>{
     await theater.save();
     res.status(200).json({ success: true, message: `Theater is now ${theater.isActive ? 'active' : 'inactive'}` });
 
-}
+};

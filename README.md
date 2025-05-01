@@ -231,11 +231,12 @@
 - `DELETE /genre/:id` - Delete genre (admin & superAdmin)
 
 ### Theater Management Endpoints
-- `GET /theaters` - Get all theaters (public)
-- `GET /theaters/:id` - Get theater details (public)
-- `POST /admin/theaters` - Add new theater (superAdmin)
-- `PUT /theaters/:id` - Update theater (admin & superAdmin)
-- `DELETE /theaters/:id` - Delete theater (admin & superAdmin)
+- `GET /theater/` - Get all theaters (public)
+- `GET /theater/:id` - Get theater details (public)
+- `POST /theater/` - Add new theater (superAdmin)
+- `PUT /theater/:id` - Update theater (admin(admin.id === manager._id) & superAdmin)
+- `PATCH /theater/:id/status` - Toggle theatre active status (admin(admin.id === manager._id) & superAdmin)
+- `DELETE /theater/:id` - Delete theater (admin(admin.id === manager._id) & superAdmin)
 
 ### Seat Management Endpoints
 - `GET /theaters/:id/seats` - Get seats for specific theater (public)
