@@ -85,7 +85,6 @@ export const getMovieByIdSchema = Joi.object({
 
 
 
-// Validation schema for updating a movie
 export const updateMovieSchema = Joi.object({
     id: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
         .required().messages({
@@ -160,4 +159,21 @@ export const updateMovieSchema = Joi.object({
             "string.empty": "Language cannot be empty"
         }),
 
+});
+
+export const deleteMovieSchema = Joi.object({
+    id: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+        .required().messages({
+            "string.pattern.base": "Invalid movie ID format",
+            "any.required": "Movie ID is required"
+        })
+});
+
+
+export const toggleMovieStatusSchema = Joi.object({
+    id: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+        .required().messages({
+            "string.pattern.base": "Invalid movie ID format",
+            "any.required": "Movie ID is required"
+        })
 });

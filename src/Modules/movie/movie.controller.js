@@ -132,3 +132,29 @@ export const updateMovie = async (req,res,next)=>{
     });
 };
 
+export const deleteMovie = async (req,res,next)=>{
+    const { id } = req.params;
+    const movie = await movieModel.findById(id);
+    if (!movie) {
+        return next(new AppError("Movie not found", 404));
+    }
+    await cloudinary.uploader.destroy(movie.posterImage.public_id);
+
+    await movieModel.findByIdAndDelete(id);
+    return res.status(200).json({
+        success: true,
+        message: "Movie deleted successfully"
+    });
+};
+
+export const toggleMovieStatus = async (req,res,next)=>{
+    const  {id} = req.params;
+    const movie = await movieModel.findById(id);
+    if(!movie){
+        return next(new AppError('Movie not found', 404));
+    }
+    movie.isActive = !movie.isActive;
+    await movie.save();
+    res.status(200).json({ success: true, message: `Movie is now ${movie.isActive ? 'active' : 'inactive'}` });
+};
+
