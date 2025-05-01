@@ -233,7 +233,7 @@
 ### Theater Management Endpoints
 - `GET /theaters` - Get all theaters (public)
 - `GET /theaters/:id` - Get theater details (public)
-- `POST /admin/theaters` - Add new theater (admin & superAdmin)
+- `POST /admin/theaters` - Add new theater (superAdmin)
 - `PUT /theaters/:id` - Update theater (admin & superAdmin)
 - `DELETE /theaters/:id` - Delete theater (admin & superAdmin)
 

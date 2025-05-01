@@ -33,5 +33,23 @@ export const createTheater = async (req,res,next)=>{
         message: "Theater created successfully",
         data: theater
     });
-}
+};
 
+export const  getALLTheater = async (req,res,next)=>{
+
+};
+
+export const  getTheaterById = async (req,res,next)=>{
+    const { id } = req.params;
+    
+    const theater = await theaterModel.findById(id);
+    
+    if (!theater) {
+        return next(new AppError("Theater not found", 404));
+    }
+    
+    res.status(200).json({
+        success: true,
+        data: theater
+    });
+};
