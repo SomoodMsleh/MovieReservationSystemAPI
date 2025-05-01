@@ -7,6 +7,7 @@ import adminRouter from "./Modules/admin/admin.router.js";
 import userRouter from "./Modules/user/user.router.js";
 import genreRouter from './Modules/genre/genre.router.js';
 import movieRouter from './Modules/movie/movie.router.js';
+import theaterRouter from './Modules/theater/theater.router.js';
 const initApp = (app,express)=>{
     app.use(express.json());
     app.use(cors());
@@ -22,6 +23,7 @@ const initApp = (app,express)=>{
     app.use('/user',userRouter);
     app.use('/genre',genreRouter);
     app.use('/movie',movieRouter);
+    app.use('/theater',theaterRouter);
 
     app.use((req,res,next) => {
         return next(new AppError("page not found",400));

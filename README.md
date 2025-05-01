@@ -70,17 +70,26 @@
 ### Theater Model
 - `_id`: ObjectId  
 - `name`: String (required, unique, trimmed)  
-- `slug`: String (required, lowercase, unique)  
-- `location`: String (required, trimmed)  
-- `totalSeats`: Number (required, min: 1)  
-- `seatingLayout`: Object (default: {})  
-- `isActive`: Boolean (default: true)  
-- `manager`: ObjectId (reference `User` with role `admin`)  
-- `createdBy`: ObjectId (reference `User`)  
-- `updatedBy`: ObjectId (reference `User`)  
+- `slug`: String (required, lowercase, unique) - Auto-generated from name  
+- `location`: String (required, trimmed) - General location description
+- `address`:
+    - city: String (trimmed)
+    - street: String (trimmed)
+    - zipCode: String (trimmed)
+- `totalSeats`: Number (required, min: 1) - Total capacity of the theater
+- `seatingLayout`:
+    - rows: Number (default: 0) - Number of seat rows
+    - columns: Number (default: 0) - Number of seat columns
+    - configuration: Object (default: {})  - Custom seating arrangement
+- `facilities`: Array of Strings - Available amenities
+     (enum: ['parking', 'food_court', 'wheelchair_access', 'dolby_sound', 'imax', '3d', 'vip_lounge'])
+- `isActive`: Boolean (default: true) - Theater operational status
+- `manager`: ObjectId (reference `User` with role `admin`) - Theater manager
+- `contactInfo` :
+    - phone: String
+    - email: String
 - `createdAt`: Date  
 - `updatedAt`: Date  
-
 ---
 
 ### Seat Model
