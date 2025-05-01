@@ -83,8 +83,6 @@ export const getMovieByIdSchema = Joi.object({
         })
 });
 
-
-
 export const updateMovieSchema = Joi.object({
     id: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
         .required().messages({
@@ -135,7 +133,7 @@ export const updateMovieSchema = Joi.object({
         .min(1).optional()
         .messages({
             "array.min": "At least one genre must be selected"
-    }),
+        }),
 
     contentRating: Joi.string()
         .valid('G', 'PG', 'PG-13', 'R', 'NC-17')
@@ -175,5 +173,53 @@ export const toggleMovieStatusSchema = Joi.object({
         .required().messages({
             "string.pattern.base": "Invalid movie ID format",
             "any.required": "Movie ID is required"
+        })
+});
+
+export const getAllMoviesSchema = Joi.object({
+    page: Joi.number()
+        .integer()
+        .min(1)
+        .optional()
+        .messages({
+            "number.base": "Page must be a number",
+            "number.min": "Page must be at least 1"
+        }),
+
+    limit: Joi.number()
+        .integer()
+        .min(1)
+        .max(100)
+        .optional()
+        .messages({
+            "number.base": "Limit must be a number",
+            "number.min": "Limit must be at least 1",
+            "number.max": "Limit cannot exceed 100"
+        }),
+
+    sort: Joi.string()
+        .optional()
+        .pattern(/^(\w+:(asc|desc),)*(\w+:(asc|desc))$/)
+        .messages({
+            "string.pattern.base": "Sort must be in format: field:asc|desc"
+        }),
+
+    title: Joi.string()
+        .optional()
+        .trim(),
+
+
+    genre: Joi.string().optional().trim(),
+
+
+    releaseYear: Joi.number()
+        .integer()
+        .min(1900)
+        .max(new Date().getFullYear() + 10)
+        .optional()
+        .messages({
+            "number.base": "Release year must be a number",
+            "number.min": "Release year must be at least 1900",
+            "number.max": `Release year cannot exceed ${new Date().getFullYear() + 10}`
         })
 });

@@ -52,6 +52,50 @@ export const createMovie = async (req,res,next) => {
 };
 
 export const getAllMovie = async (req,res,next)=>{
+    const { page = 1, limit = 10, sort, title, genre, releaseYear } = req.query;
+    const query = {};
+    if (title) {
+        query.title = { $regex: title, $options: 'i' };
+    }
+    if (genre) {
+        const genreDoc = await genreModel.findOne({ name: { $regex: genre, $options: 'i' } });
+        if (genreDoc) {
+            query.genres = genreDoc._id;
+        } else {
+            query.genres = null; // Will return empty result
+        }
+    }
+
+    if (releaseYear) {
+        const startDate = new Date(`${releaseYear}-01-01`);
+        const endDate = new Date(`${releaseYear}-12-31`);
+        query.releaseDate = { $gte: startDate, $lte: endDate };
+    }
+    const sortOptions = sort ? sort.split(',').reduce((acc, sortItem) => {
+        const [field, order] = sortItem.split(':');
+        acc[field] = order === 'desc' ? -1 : 1;
+        return acc;
+    }, {}) : { releaseDate: -1 };
+    query.isActive = 'true';
+    const movies = await movieModel.find(query)
+    .sort(sortOptions)
+    .skip((page - 1) * limit)
+    .limit(Number(limit))
+    .populate('genres', 'name'); 
+
+    const totalMovies = await movieModel.countDocuments(query);
+    
+    res.status(200).json({
+        status: "success",
+        results: movies.length,
+        pagination: {
+            totalMovies,
+            totalPages: Math.ceil(totalMovies / limit),
+            currentPage: parseInt(page),
+            limit: parseInt(limit)
+        },
+        data: { movies }
+    });
 
 };
 

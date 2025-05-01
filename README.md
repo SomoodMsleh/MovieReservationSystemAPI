@@ -206,11 +206,12 @@
 ---
 
 ### Movie Management Endpoints
-- `GET /movies` - Get all movies (public)
-- `GET /movies/:id` - Get movie details (public)
-- `POST /movies` - Add new movie (admin & superAdmin)
-- `PUT /movies/:id` - Update movie (admin & superAdmin)
-- `DELETE movies/:id` - Delete movie (admin & superAdmin)
+- `GET /movie` - Get all movies (public)
+- `GET /movie/:id` - Get movie details (public support filtering, sorting, pagination)
+- `POST /movie` - Add new movie (admin & superAdmin)
+- `PUT /movie/:id` - Update movie (admin & superAdmin)
+- `PUT /movie/:id/status` - Toggle movie active status  (admin & superAdmin)
+- `DELETE movie/:id` - Delete movie (admin & superAdmin)
 
 ### Genre Management Endpoints
 - `GET /genre` - Get all genres (public)
