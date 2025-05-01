@@ -3,7 +3,6 @@ import movieModel from "../../../DB/models/movie.model.js";
 import slugify from "slugify";
 import cloudinary from '../../utils/cloudinary.js';
 import genreModel from '../../../DB/models/genre.model.js'
-import { json } from "express";
 
 export const createMovie = async (req,res,next) => {
     const {title,description, duration, releaseDate,genres,cast, contentRating, language} = req.body;
@@ -59,7 +58,7 @@ export const getAllMovie = async (req,res,next)=>{
 export const getMovieById = async (req,res,next)=>{
     const { id } = req.params;
     const movie = await movieModel.findById(id).populate('genres', 'name');
-    if (!movie) {
+    if (!movie || !movie.isActive) {
         return next(new AppError("Movie not found", 404));
     }
     res.status(200).json({
@@ -67,3 +66,69 @@ export const getMovieById = async (req,res,next)=>{
         data: { movie }
     });
 };
+
+export const updateMovie = async (req,res,next)=>{
+    const { id } = req.params;
+    const { title, description, duration, releaseDate, genres, contentRating, cast, language } = req.body;
+    const movie = await movieModel.findById(id);
+    if (!movie) {
+        return next(new AppError("Movie not found", 404));
+    }
+    let slug;
+    if (title && title.toLowerCase() !== movie.title) {
+        const existingMovie = await movieModel.findOne({ title: title.toLowerCase() });
+        if (existingMovie && existingMovie._id.toString() !== id) {
+            return next(new AppError("Movie with this title already exists", 409));
+        }
+        slug =  slugify(title, { lower: true, strict: true });
+    }
+    let posterImage;
+    if(req.file){
+        try {
+            await cloudinary.uploader.destroy(movie.posterImage.public_id);
+            const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
+                folder: `/${process.env.APP_NAME}/moviesPoster//${movie.title}`,
+                transformation: [
+                    { width: 400, height: 400, crop: "fill" }, // Resize to standard profile image size
+                    { quality: "auto" }                       // Optimize quality   
+            ]});
+            posterImage = { secure_url, public_id };
+        }catch(error){
+            console.error("Error deleting previous image from cloudinary:", error);
+        }
+    }
+    let genres_ids = [];
+    if(genres){
+        for (const name of  genres){
+            const genre = await genreModel.findOne({name:name.toLowerCase()});
+            if(!genre){
+                return next(new AppError(`Genre '${name}' not found`,400));
+            }
+            genres_ids.push(genre._id);
+        }
+    }else{
+        genres_ids=movie.genres;
+    }
+
+    const movieUpdate = await movieModel.findByIdAndUpdate(id,{
+        title: title|| movie.title,
+        description:description  || movie.description,
+        slug: slug || movie.slug,
+        duration:duration || movie.duration,
+        posterImage:posterImage||movie.posterImage,
+        releaseDate:releaseDate || movie.releaseDate,
+        genres:genres_ids,
+        contentRating:contentRating || movie.contentRating,
+        cast: cast || movie.cast,
+        language:language || movie.language,
+
+    },
+    { new: true, runValidators: true }).populate('genres', 'name');
+
+    res.status(200).json({
+        success: true,
+        message: "Movie updated successfully",
+        data: { movieUpdate}
+    });
+};
+
