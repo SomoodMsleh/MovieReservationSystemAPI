@@ -76,3 +76,17 @@ export const updateTheaterSchema = Joi.object({
     }),
     facilities: Joi.array().items(Joi.string().valid(...facilities)).optional(),
 });
+
+export const deleteTheaterSchema = Joi.object({
+    id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required().messages({
+        'string.pattern.base': 'Invalid theater ID format',
+        'any.required': 'Theater ID is required'
+    })
+});
+
+export const toggleTheaterStatusSchema = Joi.object({
+    id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required().messages({
+        'string.pattern.base': 'Invalid theater ID format',
+        'any.required': 'Theater ID is required'
+    })
+});

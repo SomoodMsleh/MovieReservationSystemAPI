@@ -110,3 +110,31 @@ export const updateTheater = async (req,res,next)=>{
         theater: updatedTheater
     });
 }
+
+export const deleteTheater = async (req,res,next)=>{
+    const { id } = req.params;
+    if ((req.user.role !== "admin" || req.user._id !== theater.manager) && req.user.role !== "superAdmin") {
+        return next(new AppError("Not authorized to update theaters", 403));
+    }
+    const theater = await theaterModel.findByIdAndDelete(id);
+    
+    if (!theater) {
+        return next(new AppError("Theater not found", 404));
+    }
+    return res.status(200).json({
+        success: true,
+        message: "Theater deleted successfully",
+    });
+}
+
+export const toggleTheaterStatus = async (req,res,next)=>{
+    const  {id} = req.params;
+    const theater = await theaterModel.findById(id);
+    if(!theater){
+        return next(new AppError('theater not found', 404));
+    }
+    theater.isActive = !theater.isActive;
+    await theater.save();
+    res.status(200).json({ success: true, message: `Theater is now ${theater.isActive ? 'active' : 'inactive'}` });
+
+}
