@@ -41,3 +41,18 @@ export const getTheaterSeatsSchema = Joi.object({
         'any.required': 'Theater ID is required'
     })
 });
+
+export const updateSeatSchema = Joi.object({
+    id: Joi.string().hex().length(24).required().messages({
+        'string.hex': 'Seat ID must be a valid hexadecimal ID',
+        'string.length': 'Seat ID must be 24 characters long',
+        'any.required': 'Seat ID is required'
+    }),
+    row: Joi.string().trim(),
+    number: Joi.number().integer().min(1),
+    type: Joi.string().valid('standard', 'premium', 'handicap'),
+    price: Joi.number().min(0),
+    isActive: Joi.boolean()
+}).min(1).messages({
+    'object.min': 'At least one field is required for update'
+});
