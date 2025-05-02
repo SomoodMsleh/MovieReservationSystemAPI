@@ -44,5 +44,16 @@ export const configureTheaterSeats = async(req,res,next)=>{
 };
 
 export const getTheaterSeats = async (req, res, next) => {
-    
+    const { id: theaterId } = req.params;
+    const theater = await theaterModel.findById(theaterId);
+    if (!theater) {
+        return next(new AppError("Theater not found", 404));
+    }
+    const seats = await seatModel.find({ theaterId }).sort({ row: 1, number: 1 });
+    return res.status(200).json({
+        success:true,
+        message: "Seats retrieved successfully",
+        count: seats.length,
+        data: seats
+    });
 };

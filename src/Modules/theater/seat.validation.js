@@ -33,3 +33,11 @@ export const configureTheaterSeatsSchema = Joi.object({
         'array.base': 'Seats must be an array'
     })
 });
+
+export const getTheaterSeatsSchema = Joi.object({
+    id: Joi.string().hex().length(24).required().messages({
+        'string.hex': 'Theater ID must be a valid hexadecimal ID',
+        'string.length': 'Theater ID must be 24 characters long',
+        'any.required': 'Theater ID is required'
+    })
+});

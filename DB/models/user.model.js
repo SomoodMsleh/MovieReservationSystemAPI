@@ -75,14 +75,8 @@ const userSchema = new Schema({
 	verificationCodeExpiresAt: Date,
 },{
     timestamps:true,
-    toJSON:{virtuals:true},
-    toObject:{virtuals:true}
 });
 
-// Virtual for full name
-userSchema.virtual('fullName').get(function() {
-    return `${this.firstName} ${this.lastName}`;
-});
 
 // Indexes for better query performance
 userSchema.index({ email: 1 });
