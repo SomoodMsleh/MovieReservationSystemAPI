@@ -240,10 +240,10 @@
 - `DELETE /theater/:id` - Delete theater (admin(admin.id === manager._id) & superAdmin)
 
 ### Seat Management Endpoints
-- `GET /theaters/:id/seats` - Get seats for specific theater (public)
-- `POST /theaters/:id/seats` - Configure theater seats (admin & superAdmin)
-- `PUT /seats/:id` - Update seat details (admin & superAdmin)
-- `DELETE /seats/:id` - Delete seat (admin & superAdmin)
+- `GET /theater/:id/seats` - Get seats for specific theater (public)
+- `POST /theater/:id/seats` - Configure theater seats (admin & superAdmin)
+- `PUT /theater/seats/:id` - Update seat details (admin & superAdmin)
+- `DELETE /theater/seats/:id` - Delete seat (admin & superAdmin)
 
 ### Showtime Management Endpoints
 - `GET /showtimes` - Get all showtimes (public)
