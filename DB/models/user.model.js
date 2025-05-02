@@ -73,7 +73,11 @@ const userSchema = new Schema({
 	resetPasswordExpiresAt: Date,
 	verificationCode: String,
 	verificationCodeExpiresAt: Date,
-},{timestamps:true});
+},{
+    timestamps:true,
+    toJSON:{virtuals:true},
+    toObject:{virtuals:true}
+});
 
 // Virtual for full name
 userSchema.virtual('fullName').get(function() {

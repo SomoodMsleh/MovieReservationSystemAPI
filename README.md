@@ -100,6 +100,7 @@
 - `type`: String (enum: ["standard", "premium", "handicap"], default: "standard")  
 - `price`: Number (required, min: 0)  
 - `isActive`: Boolean (default: true)  
+- `seatLabel`: String — Virtual field combining row and number (e.g., "A1")
 - `createdAt`: Date  
 - `updatedAt`: Date  
 

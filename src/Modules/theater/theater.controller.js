@@ -58,7 +58,7 @@ export const  getALLTheater = async (req,res,next)=>{
         .limit(Number(limit))
         .skip(skip)
         .sort({ createdAt: -1 }
-    );
+    ).populate('manager','username');
 
     const totalTheaters = await theaterModel.countDocuments(query);
     
@@ -77,7 +77,7 @@ export const  getALLTheater = async (req,res,next)=>{
 export const  getTheaterById = async (req,res,next)=>{
     const { id } = req.params;
     
-    const theater = await theaterModel.findById(id);
+    const theater = await theaterModel.findById(id).populate('manager','username');
     
     if (!theater) {
         return next(new AppError("Theater not found", 404));

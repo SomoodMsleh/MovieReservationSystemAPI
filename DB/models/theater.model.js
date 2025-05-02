@@ -53,7 +53,9 @@ const theaterSchema = new Schema({
         phone: { type: String },
         email: { type: String }
     }
-},{timestamps:true});
+},{
+    timestamps:true,
+});
 
 theaterSchema.index({ name: 1 }, { unique: true });
 theaterSchema.index({ slug: 1 }, { unique: true });
