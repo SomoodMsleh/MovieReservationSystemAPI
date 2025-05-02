@@ -243,6 +243,7 @@
 - `GET /theater/:id/seats` - Get seats for specific theater (public)
 - `POST /theater/:id/seats` - Configure theater seats (admin & superAdmin)
 - `PUT /theater/seats/:id` - Update seat details (admin & superAdmin)
+- `PATCH /theater/seats/:id/status` - Toggle seat active status (admin(admin.id === manager._id) & superAdmin)
 - `DELETE /theater/seats/:id` - Delete seat (admin & superAdmin)
 
 ### Showtime Management Endpoints

@@ -111,3 +111,53 @@ export const updateSeat = async (req, res, next) => {
 
 
 };
+
+export const deleteSeat = async (req, res, next) => {
+    const { id: seatId } = req.params;
+
+    const seat = await seatModel.findById(seatId);
+    if (!seat) {
+        return next(new AppError("Seat not found", 404));
+    }
+
+    const theater = await theaterModel.findById(seat.theaterId);
+    if (!theater) {
+        return next(new AppError("Associated theater not found", 404));
+    }
+
+    if (req.user.role !== "superAdmin" &&
+        (req.user.role !== "admin" || req.user._id.toString() !== theater.manager?.toString())) {
+        return next(new AppError("Not authorized to delete seats for this theater", 403));
+    }
+
+    const deletedSeat = await seatModel.findByIdAndDelete(seatId);
+
+    return res.status(200).json({
+        success: true,
+        message: "Seat deleted successfully",
+        data: deletedSeat
+    });
+};
+
+export const toggleSeatStatus =  async (req, res, next) => {
+    const { id: seatId } = req.params;
+
+    const seat = await seatModel.findById(seatId);
+    if (!seat) {
+        return next(new AppError("Seat not found", 404));
+    }
+
+    const theater = await theaterModel.findById(seat.theaterId);
+    if (!theater) {
+        return next(new AppError("Associated theater not found", 404));
+    }
+
+    if (req.user.role !== "superAdmin" &&
+        (req.user.role !== "admin" || req.user._id.toString() !== theater.manager?.toString())) {
+        return next(new AppError("Not authorized to delete seats for this theater", 403));
+    }
+
+    seat.isActive = !seat.isActive;
+    await seat.save();
+    res.status(200).json({ success: true, message: `This seat is now ${seat.isActive ? 'active' : 'inactive'}` });
+};

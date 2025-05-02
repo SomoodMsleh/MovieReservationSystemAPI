@@ -53,6 +53,22 @@ export const updateSeatSchema = Joi.object({
     type: Joi.string().valid('standard', 'premium', 'handicap'),
     price: Joi.number().min(0),
     isActive: Joi.boolean()
-}).min(1).messages({
-    'object.min': 'At least one field is required for update'
+});
+
+export const deleteSeatSchema = Joi.object({
+    id: Joi.string().hex().length(24).required().messages({
+        'string.hex': 'Seat ID must be a valid hexadecimal ID',
+        'string.length': 'Seat ID must be 24 characters long',
+        'any.required': 'Seat ID is required'
+    })
+});
+
+
+
+export const toggleSeatStatusSchema = Joi.object({
+    id: Joi.string().hex().length(24).required().messages({
+        'string.hex': 'Seat ID must be a valid hexadecimal ID',
+        'string.length': 'Seat ID must be 24 characters long',
+        'any.required': 'Seat ID is required'
+    })
 });
