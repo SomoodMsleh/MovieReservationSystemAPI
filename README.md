@@ -37,6 +37,7 @@
 - `posterImage`: object (public_id (String required) , secure_url (String required))
 - `releaseDate`: Date (required)  
 - `contentRating`:  String (enum: ['G', 'PG', 'PG-13', 'R', 'NC-17'])
+- `trailerUrl`: String (required, trimmed)  
 - `genres`: Array of ObjectIds (references `Genre`)   
 - `cast`: Array of Strings (max 100 characters per item)  
 - `language`: String (default: "english")  
@@ -223,6 +224,8 @@
 - `PUT /movie/:id/status` - Toggle movie active status  (admin & superAdmin)
 - `DELETE movie/:id` - Delete movie (admin & superAdmin)
 
+---
+
 ### Genre Management Endpoints
 - `GET /genre` - Get all genres (public)
 - `GET /genre/details` - Get all genres (admin,superAdmin) with who created and update each genre
@@ -230,6 +233,8 @@
 - `POST /genre` - Create genre (admin & superAdmin)
 - `PUT /genre/:id` - Update genre (admin & superAdmin)
 - `DELETE /genre/:id` - Delete genre (admin & superAdmin)
+
+---
 
 ### Theater Management Endpoints
 - `GET /theater/` - Get all theaters (public)
@@ -239,6 +244,8 @@
 - `PATCH /theater/:id/status` - Toggle theatre active status (admin(admin.id === manager._id) & superAdmin)
 - `DELETE /theater/:id` - Delete theater (admin(admin.id === manager._id) & superAdmin)
 
+---
+
 ### Seat Management Endpoints
 - `GET /theater/:id/seats` - Get seats for specific theater (public)
 - `POST /theater/:id/seats` - Configure theater seats (admin & superAdmin)
@@ -246,13 +253,15 @@
 - `PATCH /theater/seats/:id/status` - Toggle seat active status (admin(admin.id === manager._id) & superAdmin)
 - `DELETE /theater/seats/:id` - Delete seat (admin & superAdmin)
 
+---
+
 ### Showtime Management Endpoints
-- `GET /showtimes` - Get all showtimes (public)
-- `GET /showtimes/date/:date` - Get showtimes for specific date (public)
-- `GET /movies/:id/showtimes` - Get showtimes for specific movie (public)
-- `POST /showtimes` - Create showtime (admin & superAdmin)
-- `PUT /showtimes/:id` - Update showtime (admin & superAdmin)
-- `DELETE /showtimes/:id` - Delete showtime (admin & superAdmin)
+- `GET /showtime` - Get all showtimes (public)
+- `GET /showtime/date/:date` - Get showtimes for specific date (public)
+- `GET /movies/:id/showtime` - Get showtimes for specific movie (public)
+- `POST /showtime` - Create showtime (admin & superAdmin)
+- `PUT /showtime/:id` - Update showtime (admin & superAdmin)
+- `DELETE /showtime/:id` - Delete showtime (admin & superAdmin)
 
 ### Seat Availability Endpoints
 - `GET /showtimes/:id/seats` - Get seats for specific showtime (public)

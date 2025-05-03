@@ -58,7 +58,14 @@ export const createMovieSchema = Joi.object({
             "any.only": "Content rating must be one of: G, PG, PG-13, R, NC-17",
             "any.required": "Content rating is required"
         }),
-
+    trailerUrl: Joi.string()
+        .uri({ scheme: ['http', 'https'] })
+        .required()
+        .messages({
+            "string.uri": "Trailer URL must be a valid HTTP or HTTPS URL",
+            "string.empty": "Trailer URL is required",
+            "any.required": "Trailer URL is required"
+        }),
     cast: Joi.array()
         .items(Joi.string().max(100))
         .optional()
@@ -111,7 +118,6 @@ export const updateMovieSchema = Joi.object({
             "string.min": "Description must be at least 10 characters",
             "string.max": "Description cannot exceed 2000 characters"
         }),
-
     duration: Joi.number()
         .integer()
         .min(1)
@@ -141,6 +147,14 @@ export const updateMovieSchema = Joi.object({
         .messages({
             "string.empty": "Content rating cannot be empty",
             "any.only": "Content rating must be one of: G, PG, PG-13, R, NC-17"
+        }),
+
+    trailerUrl: Joi.string()
+        .uri({ scheme: ['http', 'https'] })
+        .optional()
+        .messages({
+            "string.uri": "Trailer URL must be a valid HTTP or HTTPS URL",
+            "string.empty": "Trailer URL cannot be empty"
         }),
 
     cast: Joi.array()

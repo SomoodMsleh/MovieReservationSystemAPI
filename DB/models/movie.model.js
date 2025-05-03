@@ -35,6 +35,12 @@ const movieSchema = new Schema({
             required: true
         }
     },
+    trailerUrl: {
+        type: String,
+        required: true,
+        trim: true,
+        match: /^https?:\/\/.+/,
+    },
     releaseDate: {
         type: Date,
         required: true

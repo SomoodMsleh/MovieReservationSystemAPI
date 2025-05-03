@@ -5,8 +5,8 @@ import cloudinary from '../../utils/cloudinary.js';
 import genreModel from '../../../DB/models/genre.model.js'
 
 export const createMovie = async (req,res,next) => {
-    const {title,description, duration, releaseDate,genres,cast, contentRating, language} = req.body;
-    if(!title||!description||!duration||!releaseDate||!genres||!contentRating||!cast){
+    const {title,description, duration, releaseDate,genres,cast, contentRating, language,trailerUrl} = req.body;
+    if(!title||!description||!duration||!releaseDate||!genres||!contentRating||!cast||!trailerUrl){
         return next(new AppError("All fields are required",400));
     }
     if (!req.file) {
@@ -37,7 +37,7 @@ export const createMovie = async (req,res,next) => {
     const movieLanguage = language || defaultLanguage;
     const movie = await movieModel.create({
         title:title?.toLowerCase(),slug,description,duration,
-        posterImage,releaseDate: new Date(releaseDate),genres:genres_ids,
+        posterImage,trailerUrl,releaseDate: new Date(releaseDate),genres:genres_ids,
         contentRating,cast,language: movieLanguage?.toLowerCase()
     });
     
@@ -110,7 +110,7 @@ export const getMovieById = async (req,res,next)=>{
 
 export const updateMovie = async (req,res,next)=>{
     const { id } = req.params;
-    const { title, description, duration, releaseDate, genres, contentRating, cast, language } = req.body;
+    const { title, description, duration, releaseDate, genres, contentRating, cast, language,trailerUrl } = req.body;
     const movie = await movieModel.findById(id);
     if (!movie) {
         return next(new AppError("Movie not found", 404));
@@ -157,6 +157,7 @@ export const updateMovie = async (req,res,next)=>{
         slug: slug || movie.slug,
         duration:duration || movie.duration,
         posterImage:posterImage||movie.posterImage,
+        trailerUrl:trailerUrl || movie.trailerUrl,
         releaseDate:releaseDate || movie.releaseDate,
         genres:genres_ids,
         contentRating:contentRating || movie.contentRating,
