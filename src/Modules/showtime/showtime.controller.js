@@ -2,6 +2,8 @@ import showtimeModel from '../../../DB/models/showtime.model.js';
 import {AppError} from "../../utils/appError.js";
 import movieModel from '../../../DB/models/movie.model.js';
 import theaterModel from '../../../DB/models/theater.model.js';
+
+
 export const createShowtime = async (req, res, next) => {
     const {movieId, theaterId, startTime, price } = req.body;
 
