@@ -37,10 +37,6 @@ const userSchema = new Schema({
         required: [true, "Last name is required"],
         trim: true
     },
-    dateOfBirth:{
-        type: Date,
-        //required: [true, "Date of birth is required"]
-    },
     phoneNumber:{
         type:String,
         trim: true

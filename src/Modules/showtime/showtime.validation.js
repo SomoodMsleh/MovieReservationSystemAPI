@@ -20,3 +20,21 @@ export const createShowtimeSchema = Joi.object({
     })
 });
 
+
+export const getAllShowtimeQuerySchema = Joi.object({
+    movie: Joi.string().min(1).max(100).optional(),
+    theater: Joi.string().min(1).max(100).optional(),
+    startAfter: Joi.date().iso().optional()
+        .messages({
+            'date.format': `"startAfter" must be a valid ISO 8601 date string`
+        }),
+
+    startBefore: Joi.date().iso().optional()
+        .messages({
+            'date.format': `"startBefore" must be a valid ISO 8601 date string`
+        }),
+
+    page: Joi.number().integer().min(1).optional(),
+
+    limit: Joi.number().integer().min(1).max(100).optional()
+});

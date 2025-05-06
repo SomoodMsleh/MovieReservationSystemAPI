@@ -71,3 +71,82 @@ export const createShowtime = async (req, res, next) => {
     });
 
 };
+
+
+export const getAllShowtime = async (req,res,next) =>{
+    try {
+        const { movie, theater, startAfter, startBefore} = req.query;
+        const filter = {};
+        
+
+        if (movie) {
+            const foundMovie = await movieModel.findOne({ 
+                title: new RegExp(movie, 'i') 
+            });
+            
+            if (!foundMovie) {
+                return res.status(404).json({
+                    status: 'error',
+                    message: `No movie found with title: ${movie}`
+                });
+            }
+            
+            filter.movieId = foundMovie._id;
+        }
+        
+        
+        if (theater) {
+            const foundTheater = await theaterModel.findOne({ 
+                name: new RegExp(theater, 'i')
+            });
+            if (!foundTheater) {
+                return res.status(404).json({
+                    status: 'error',
+                    message: `No theater found with name: ${theater}`
+                });
+            }
+            filter.theaterId = foundTheater._id;
+        }
+        
+        
+        if (startAfter || startBefore) {
+            filter.startTime = {};
+            if (startAfter) {
+                filter.startTime.$gte = new Date(startAfter);
+            }
+            if (startBefore) {
+                filter.startTime.$lte = new Date(startBefore);
+            }
+        }
+        
+        filter.isActive = true;
+        
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        
+        const totalDocs = await showtimeModel.countDocuments(filter);
+        
+        const showtime = await showtimeModel.find(filter)
+            .populate('movieId', 'title posterImage duration')
+            .populate('theaterId', 'name location')
+            .sort({ startTime: 1 })
+            .skip(skip)
+            .limit(limit);
+        
+        res.status(200).json({
+            status: 'success',
+            results: showtime.length,
+            pagination: {
+                currentPage: page,
+                totalPages: Math.ceil(totalDocs / limit),
+                totalResults: totalDocs,
+                hasNextPage: page * limit < totalDocs,
+                hasPrevPage: page > 1
+            },
+            data: showtime
+        });
+    } catch (error) {
+        next(error);
+    }
+};
