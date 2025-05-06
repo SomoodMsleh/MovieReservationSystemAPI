@@ -200,3 +200,47 @@ export const toggleMovieStatus = async (req,res,next)=>{
     res.status(200).json({ success: true, message: `Movie is now ${movie.isActive ? 'active' : 'inactive'}` });
 };
 
+
+export const getShowtimeByMovie = async (req, res, next) => {
+    const { id } = req.params;
+    
+
+    const movie = await movieModel.findById(id);
+    if (!movie) {
+        return next(new AppError('Movie not found', 404));
+    }
+
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const showtimes = await showtimeModel.find({ 
+        movieId: id,
+        startTime: { $gte: now },
+        isActive: true
+    })
+    .populate('theaterId', 'name location')
+    .sort({ startTime: 1 });
+    
+    const groupedShowtime = {};
+    
+    showtimes.forEach(showtime => {
+        const date = showtime.startTime.toISOString().split('T')[0];
+        if (!groupedShowtime[date]) {
+            groupedShowtime[date] = [];
+        }
+        groupedShowtime[date].push(showtime);
+    });
+    
+    res.status(200).json({
+        status: 'success',
+        data: {
+            movie: {
+                id: movie._id,
+                title: movie.title,
+                posterImage: movie.posterImage
+            },
+            dates: Object.keys(groupedShowtime),
+            showtimes: groupedShowtime
+        }
+    });
+};

@@ -257,10 +257,12 @@
 
 ### Showtime Management Endpoints
 - `GET /showtime` - Get all showtimes (public)
-- `GET /showtime/date/:date` - Get showtimes for specific date (public)
-- `GET /movies/:id/showtime` - Get showtimes for specific movie (public)
+- `GET /:id` - Get showtime details (public)
+- `GET /showtime/date/:date` - Get showtime for specific date (public)
+- `GET /movie/:id/showtime` - Get showtime for specific movie (public)
 - `POST /showtime` - Create showtime (admin & superAdmin)
 - `PUT /showtime/:id` - Update showtime (admin & superAdmin)
+- `PATCH /showtime/:id/status` - Toggle theatre active status (admin & superAdmin)
 - `DELETE /showtime/:id` - Delete showtime (admin & superAdmin)
 
 ### Seat Availability Endpoints

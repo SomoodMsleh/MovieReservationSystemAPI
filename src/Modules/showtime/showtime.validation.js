@@ -38,3 +38,43 @@ export const getAllShowtimeQuerySchema = Joi.object({
 
     limit: Joi.number().integer().min(1).max(100).optional()
 });
+
+export const getShowtimeByDateSchema = Joi.object({
+    date: Joi.date().iso().required().messages({
+        'date.base': 'Date must be a valid date in ISO format (YYYY-MM-DD)',
+        'any.required': 'Date is required'
+    })
+});
+
+export const getShowtimeByIdSchema = Joi.object({
+    id: Joi.string().hex().length(24).required().messages({
+        'any.required': 'Showtime ID is required'
+    })
+});
+
+export const deleteShowtimeSchema = Joi.object({
+    id: Joi.string().hex().length(24).required().messages({
+        'any.required': 'Showtime ID is required'
+    })
+});
+
+export const toggleShowtimeStatusSchema = Joi.object({
+    id: Joi.string().hex().length(24).required().messages({
+        'any.required': 'Showtime ID is required'
+    })
+});
+
+
+export const updateShowtimeSchema = Joi.object({
+    id:  Joi.string().hex().length(24).required().messages({
+        'any.required': 'Showtime ID is required'
+    }),
+    movieId:  Joi.string().hex().length(24).required(),
+    theaterId:  Joi.string().hex().length(24).required(),
+    startTime: Joi.date().iso().greater('now'),
+    price: Joi.number().min(0),
+    isActive: Joi.boolean()
+}).min(1).messages({
+    'object.min': 'At least one field must be provided to update'
+});
+

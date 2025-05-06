@@ -237,3 +237,9 @@ export const getAllMoviesSchema = Joi.object({
             "number.max": `Release year cannot exceed ${new Date().getFullYear() + 10}`
         })
 });
+
+export const getShowtimeByMovieSchema = Joi.object({
+        id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required().messages({
+            'any.required': 'Movie ID is required'
+        })
+    });
